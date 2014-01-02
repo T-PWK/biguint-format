@@ -1,0 +1,25 @@
+{
+  "name": "biguint-format",
+  "version": "0.0.1",
+  "description": "Node.js module to format big uint numbers from a byte array or a node Buffer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/T-PWK/biguint-format.git"
+  },
+  "keywords": [
+    "big",
+    "bignum",
+    "biguint",
+    "uint",
+    "integer"
+  ],
+  "author": "Tom Pawlak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/T-PWK/biguint-format/issues"
+  }
+}
