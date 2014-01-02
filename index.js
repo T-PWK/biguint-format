@@ -10,15 +10,15 @@
  * http://en.wikipedia.org/wiki/Double_precision_floating-point_format
  *
  * All the module methods wrap a node Buffer or an array of byte (values from 0 to 255)
- * values and format big uint number to required format. The internal buffer format is 
- * Little Endian i.e. the most-significant byte is the last byte of the buffer, the
- * least-significant at buffer[0]. Supplied numbers can have different formats. In case 
- * of Big Endian format, format attribute needs to be specified
+ * values and format big uint number to required format. The internal buffer format for 
+ * toDecimalString is Little Endian i.e. the most-significant byte is the last byte 
+ * of the buffer, the least-significant at buffer[0]. 
+ * Supplied numbers can have both Big Endian ('BE' - default) and Little Endian ('LE') formats.
  */
 
 function toDecimalString (buffer, format) {
-	var format = format || 'LE'             // bytest format BE - Big Endian, LE - Little Endian (default)
-		, buffer = toBuffer(buffer, format) // number buffer working copy
+	var format = format || 'BE'             // bytest format BE - Big Endian (default), LE - Little Endian
+		, buffer = toBuffer(buffer, format, 'LE') // number buffer working copy
 		, bits = buffer.length * 8          // number of bits in the buffer
 		, lastBit = buffer.length -1        // last bit index
 		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1)) // digits buffer
@@ -61,13 +61,30 @@ function toDecimalString (buffer, format) {
 	return digits.toString('ascii', d);
 }
 
+/*
+ * Converts given input (node Buffer or array of bytes) to hexadecimal string 0xDDDD where D is [0-9a-f].
+ * All leading 0's are stripped out i.e. [0x00, 0x00, 0x00, 0x01] -> '0x1'
+ */
 function toHexString (buffer, format) {
+	var format = format || 'BE', buffer = toBuffer(buffer, format, 'BE'), digits = buffer.toString('hex'), idx = -1;
+
+	for (var i = 0; i < digits.length; i++) {
+		// get rid of leading 0's; reuse d for the first non-zero value index
+		if(digits[i] !== '0') {
+			idx = i;
+			break;
+		}
+	};
+
+	// if there are only 0's use the last digit
+	idx = idx >= 0 ? idx : digits.length - 1;
+	return '0x' + digits.slice(idx);
 }
 
-function toOctetString (buffer, format) {
-}
-
-function toBuffer (buffer, format) {
+/*
+ * Checks type of data and perform conversion if necessary
+ */
+function toBuffer (buffer, format, reqFormat) {
 	var _buffer;
 	if (Buffer.isBuffer(buffer)) {
 		_buffer = new Buffer(buffer.length);
@@ -76,9 +93,27 @@ function toBuffer (buffer, format) {
 	else if (Array.isArray(buffer)) {
 		_buffer = new Buffer(buffer);
 	}
+	// Change internal format from BE to LE
+	if(format !== reqFormat) reverseBuffer(_buffer)
+
 	return _buffer;
 }
 
+/*
+ * Performs bit order reverse
+ */
+function reverseBuffer (buffer) {
+	var tmp, len = buffer.length - 1, half = Math.floor(buffer.length / 2);
+	for (var i = len; i >= half; i--) {
+		tmp = buffer[i];
+		buffer[i] = buffer[len - i];
+		buffer[len - i] = tmp;
+	};
+}
+
+/*
+ * Performs buffer bits shift. It assumes that buffer is in Little Endian format
+ */
 function bufferShift (buffer) {
 	var carry;
 	for (var i = buffer.length; i >= 0; i--) {
@@ -90,6 +125,5 @@ function bufferShift (buffer) {
 
 module.exports = {
 	'toDecimalString': toDecimalString,
-	'toHexString': toHexString,
-	'toOctetString': toOctetString
+	'toHexString': toHexString
 }
