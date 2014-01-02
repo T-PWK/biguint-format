@@ -4,7 +4,7 @@
   "description": "Node.js module to format big uint numbers from a byte array or a node Buffer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
