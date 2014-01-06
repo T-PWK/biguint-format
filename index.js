@@ -18,7 +18,7 @@
 
 function toDecimalString (buffer, format) {
 	var format = format || 'BE'             // bytest format BE - Big Endian (default), LE - Little Endian
-		, buffer = toBuffer(buffer, format, 'LE') // number buffer working copy
+		, buffer = toBuffer(buffer, format, format !== 'LE') // number buffer working copy
 		, bits = buffer.length * 8          // number of bits in the buffer
 		, lastBit = buffer.length -1        // last bit index
 		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1)) // digits buffer
@@ -66,7 +66,10 @@ function toDecimalString (buffer, format) {
  * All leading 0's are stripped out i.e. [0x00, 0x00, 0x00, 0x01] -> '0x1'
  */
 function toHexString (buffer, format) {
-	var format = format || 'BE', buffer = toBuffer(buffer, format, 'BE'), digits = buffer.toString('hex'), idx = -1;
+	var format = format || 'BE'
+		, buffer = toBuffer(buffer, format, format !== 'BE')
+		, digits = buffer.toString('hex')
+		, idx = -1;
 
 	for (var i = 0; i < digits.length; i++) {
 		// get rid of leading 0's; reuse d for the first non-zero value index
@@ -84,7 +87,7 @@ function toHexString (buffer, format) {
 /*
  * Checks type of data and perform conversion if necessary
  */
-function toBuffer (buffer, format, reqFormat) {
+function toBuffer (buffer, format, reverse) {
 	var _buffer;
 	if (Buffer.isBuffer(buffer)) {
 		_buffer = new Buffer(buffer.length);
@@ -92,9 +95,21 @@ function toBuffer (buffer, format, reqFormat) {
 	} 
 	else if (Array.isArray(buffer)) {
 		_buffer = new Buffer(buffer);
+	} 
+	else if (typeof buffer === 'string') {
+		var num = buffer.replace(/^0x/i,'')
+			, num = num.length % 2 ? '0' + num : num
+			, nums = num.match(/../g)
+			, _buffer = new Buffer(nums.length);
+
+		_buffer.fill(0);
+	
+		for (var i = nums.length - 1; i >= 0; i--)
+			_buffer.writeUInt8(parseInt(nums[i], 16), i);
 	}
+
 	// Change internal format from BE to LE
-	if(format !== reqFormat) reverseBuffer(_buffer)
+	if(reverse) reverseBuffer(_buffer)
 
 	return _buffer;
 }
