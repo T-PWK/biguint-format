@@ -1,38 +1,32 @@
 /**
- * Support for formatting big uint numbers in Node.js
+ * Support big uint number convertion to decimal string in Node.js
  *
- * JS Numbers are IEEE-754 binary double-precision floats, which limits the
+ * JavaScript Numbers are IEEE-754 binary double-precision floats, which limits the
  * range of values that can be represented with integer precision to:
  *
- * 2^^53 <= N <= 2^53
+ * 2^53 <= N <= 2^53
  *
- * For details about IEEE-754 see:
- * http://en.wikipedia.org/wiki/Double_precision_floating-point_format
+ * For more details about IEEE-754 see: http://en.wikipedia.org/wiki/IEEE_floating_point
  *
- * All the module methods wrap a node Buffer or an array of byte (values from 0 to 255)
- * values and format big uint number to required format. The internal buffer format for 
- * toDecimalString is Little Endian i.e. the most-significant byte is the last byte 
- * of the buffer, the least-significant at buffer[0]. 
- * Supplied numbers can have both Big Endian ('BE' - default) and Little Endian ('LE') formats.
+ * All methods accept a big uint number (it can be node Buffer, an array of bytes 
+ * i.e. number values from 0x0 to 0xFF, or a string (number) in a hexadecimal format) 
+ * and a number format string 'BE' (default) for Big Endian and 'LE' for Little Endian.
  */
 
 function toDecimalString (buffer, format) {
-	var format = format || 'BE'             // bytest format BE - Big Endian (default), LE - Little Endian
-		, buffer = toBuffer(buffer, format, format !== 'LE') // number buffer working copy
-		, bits = buffer.length * 8          // number of bits in the buffer
-		, lastBit = buffer.length -1        // last bit index
-		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1)) // digits buffer
-		, lastDigit = digits.length - 1     // last digit index
-		, d      // digit index
-		, carry; // carry flag
+	var format = format || 'BE'                               // bytest format BE - Big Endian (default), LE - Little Endian
+		, buffer = _toBuffer(buffer, format, format !== 'LE') // number buffer working copy
+		, bits = buffer.length * 8                            // number of bits in the buffer
+		, lastBit = buffer.length -1                          // last bit index
+		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1))   // digits buffer
+		, lastDigit = digits.length - 1, d, carry;            // last digit index, digit index, carry flag
 
-	digits.fill(0);
+	digits.fill(0); // reset digits buffer
 
 	for (i = 0; i < bits; i++) {
 		carry = buffer[lastBit] >= 0x80;
 
-		// shift buffer bits
-		bufferShift(buffer);
+		_leftShift(buffer);  // shift buffer bits
 
 		for (d = lastDigit; d >= 0; d--) {
 			digits[d] += digits[d] + (carry ? 1 : 0);
@@ -42,21 +36,14 @@ function toDecimalString (buffer, format) {
 
 	};
 
-	for (var i = 0; i < digits.length; i++) {
-		// get rid of leading 0's; reuse d for the first non-zero value index
-		if(digits[i] > 0) {
-			d = i;
-			break;
-		}
-	};
+	// get rid of leading 0's; reuse d for the first non-zero value index
+	d = _lastHeadIndex(digits, 0);
 
 	// if there are only 0's use the last digit
 	d = d >= 0 ? d : lastDigit;
 
 	// convert numbers to ascii digits
-	for (var i = 0; i < digits.length; i++) {
-		digits[i] += 48;
-	};
+	_toAsciiDigits(digits, d);
 
 	return digits.toString('ascii', d);
 }
@@ -67,27 +54,64 @@ function toDecimalString (buffer, format) {
  */
 function toHexString (buffer, format) {
 	var format = format || 'BE'
-		, buffer = toBuffer(buffer, format, format !== 'BE')
+		, buffer = _toBuffer(buffer, format, format !== 'BE')
 		, digits = buffer.toString('hex')
-		, idx = -1;
-
-	for (var i = 0; i < digits.length; i++) {
-		// get rid of leading 0's; reuse d for the first non-zero value index
-		if(digits[i] !== '0') {
-			idx = i;
-			break;
-		}
-	};
+		, idx = _lastHeadIndex(digits, '0');
 
 	// if there are only 0's use the last digit
 	idx = idx >= 0 ? idx : digits.length - 1;
+	
 	return '0x' + digits.slice(idx);
+}
+
+function toOctetString (buffer, format) {
+	var format = format || 'BE'
+		, buffer = _toBuffer(buffer, format, format !== 'BE')
+		, shifts = Math.floor(buffer.length * 8 / 3)
+		, lastIdx = buffer.length - 1
+		, digits = new Buffer(shifts)
+		, idx = -1;
+
+	digits.fill(0); // reset digits buffer
+	for (i = digits.length - 1; i >= 0; i--) {
+		digits[i] = buffer[lastIdx] & 0x7;
+		// right shift buffer by 3 bits
+		_rightShift(buffer);  
+		_rightShift(buffer);
+		_rightShift(buffer);
+	}
+
+	// get rid of leading 0's; reuse d for the first non-zero value index
+	idx = _lastHeadIndex(digits, 0);
+	idx = idx >= 0 ? idx : lastIdx;
+
+	// convert numbers to ascii digits
+	_toAsciiDigits(digits, idx);
+
+	return '0' + digits.toString('ascii', idx)
+}
+
+function _toAsciiDigits (buffer, offset) {
+	for (var i = offset; i < buffer.length; i++) {
+		buffer[i] += 48;
+	};
+}
+
+/*
+ * Finds last head index of the given value in the given buffer
+ * Otherwise it returns -1.
+ */
+function _lastHeadIndex (buffer, value) {
+	for (var i = 0; i < buffer.length; i++) {
+		if(buffer[i] !== value) return i;
+	};
+	return -1;
 }
 
 /*
  * Checks type of data and perform conversion if necessary
  */
-function toBuffer (buffer, format, reverse) {
+function _toBuffer (buffer, format, reverse) {
 	var _buffer;
 	if (Buffer.isBuffer(buffer)) {
 		_buffer = new Buffer(buffer.length);
@@ -97,27 +121,25 @@ function toBuffer (buffer, format, reverse) {
 		_buffer = new Buffer(buffer);
 	} 
 	else if (typeof buffer === 'string') {
-		var num = buffer.replace(/^0x/i,'')
-			, num = num.length % 2 ? '0' + num : num
-			, nums = num.match(/../g)
+		var nums = buffer.replace(/^0x/i,'').match(/.{1,2}(?=(..)+(?!.))|..$/g)
 			, _buffer = new Buffer(nums.length);
 
 		_buffer.fill(0);
-	
+
 		for (var i = nums.length - 1; i >= 0; i--)
 			_buffer.writeUInt8(parseInt(nums[i], 16), i);
 	}
 
 	// Change internal format from BE to LE
-	if(reverse) reverseBuffer(_buffer)
+	if(reverse) _reverseBuffer(_buffer)
 
 	return _buffer;
 }
 
 /*
- * Performs bit order reverse
+ * Performs byte order reverse
  */
-function reverseBuffer (buffer) {
+function _reverseBuffer (buffer) {
 	var tmp, len = buffer.length - 1, half = Math.floor(buffer.length / 2);
 	for (var i = len; i >= half; i--) {
 		tmp = buffer[i];
@@ -127,9 +149,9 @@ function reverseBuffer (buffer) {
 }
 
 /*
- * Performs buffer bits shift. It assumes that buffer is in Little Endian format
+ * Performs buffer left bits shift
  */
-function bufferShift (buffer) {
+function _leftShift (buffer) {
 	var carry;
 	for (var i = buffer.length; i >= 0; i--) {
 		carry = (buffer[i] & 0x80) != 0;
@@ -138,7 +160,22 @@ function bufferShift (buffer) {
 	};
 }
 
+/*
+ * Performs buffer right bits shift
+ */
+function _rightShift (buffer) {
+	var carry, prevcarry;
+	for (var i = 0; i < buffer.length; i++) {
+		carry = prevcarry;
+		prevcarry = (buffer[i] & 0x1) != 0;
+		buffer[i] = Math.floor(buffer[i] / 2) & 0xFF;
+		if(carry && i > 0) buffer[i] |= 0x80;
+	};
+}
+
+
 module.exports = {
 	'toDecimalString': toDecimalString,
-	'toHexString': toHexString
+	'toHexString': toHexString,
+	'toOctetString': toOctetString
 }

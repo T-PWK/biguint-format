@@ -21,7 +21,10 @@ var tests = [
 	[[0x1, 0xFF, 0xFF]], '0x1ffff', 'toHexString',
 	[[0xFF, 0xFF, 0x01], 'LE'], '0x1ffff', 'toHexString',
 	[[0x00, 0x00, 0x00, 0x01]], '0x1', 'toHexString',
-	['0x0000100'], '0x100', 'toHexString'
+	['0x0000100'], '0x100', 'toHexString',
+	['0x1FF'], '0777', 'toOctetString',
+	['0x123456789A'], '01106425474232', 'toOctetString',
+	['0x123456789ABCDEFF'], '0110642547423257157377', 'toOctetString'
 ]
 
 // Iterate over all tests

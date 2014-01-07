@@ -1,7 +1,7 @@
 {
   "name": "biguint-format",
-  "version": "0.0.2",
-  "description": "Node.js module to format big uint numbers from a byte array or a node Buffer",
+  "version": "0.0.3",
+  "description": "Node.js module to format big uint numbers from a node Buffer, an array of bytes or a string in hex format to decimal, hexadecimal or octet string",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
@@ -15,7 +15,12 @@
     "bignum",
     "biguint",
     "uint",
-    "integer"
+    "integer",
+    "hex",
+    "hexadecimal",
+    "octet",
+    "decimal",
+    "formatting"
   ],
   "author": "Tom Pawlak",
   "license": "MIT",
