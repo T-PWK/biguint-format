@@ -1,6 +1,6 @@
 {
   "name": "biguint-format",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "An arbitrary length unsigned integer formatter library for Node.js",
   "main": "index.js",
   "scripts": {
