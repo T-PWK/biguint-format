@@ -27,10 +27,10 @@ var tests = [
 	[[0xFF, 0x1], 'oct', {format:'LE'}], '777',
 	['0x123456789A', 'oct', {prefix:'0'}], '01106425474232',
 	['0x123456789ABCDEFF', 'oct', {prefix:'0'}], '0110642547423257157377',
-	[[0xFF, 0x1], 'bin', {format:'LE'}], '111111111',
-	[[0x1, 0xFF], 'bin'], '111111111',
-	['0x1FF', 'bin', {delimiter:' '}], '1 11111111',
-	['0x1FF', 'bin', {delimiter:'|', prefix:'B'}], 'B1|11111111'
+	[[0xFF, 0x1], 'bin', {format:'LE'}], '0000000111111111',
+	[[0x1, 0xFF], 'bin'], '0000000111111111',
+	['0x1FF', 'bin', {delimiter:' '}], '00000001 11111111',
+	['0x1FF', 'bin', {delimiter:'|', prefix:'B'}], 'B00000001|11111111'
 ]
 
 // Iterate over all tests
