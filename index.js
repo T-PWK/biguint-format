@@ -62,12 +62,13 @@ function toDecimalString (buffer, options) {
 }
 
 function toBinaryString (buffer, options) {
-	var options = options || {}, digits = new Array(buffer.length);
+	var options = options || {}, digits = new Array(buffer.length), num;
 
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
 	for (var i = 0; i < buffer.length; i++) {
-		digits[i] = buffer[i].toString(2);
+		num = buffer[i].toString(2);
+		digits[i] = '00000000'.slice(0, 8 - num.length) + buffer[i].toString(2)
 	};
 
 	return (options.prefix || '') + digits.join(options.delimiter || '');
