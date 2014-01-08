@@ -1,6 +1,8 @@
+Big Unsigned Integer Formatter
+==============================
 JavaScript uses [IEEE 754 double-precision floats](http://en.wikipedia.org/wiki/IEEE_floating_point) to represents numbers. That works perfectly fine for small numbers, however, it is an issue for big integers. This means they lose integer precision for values beyond `+/- 2 pow 53`
 
-### Problem
+### Problem ###
 
 Presentation of *small* integer in decimal format works fine (e.g. `0x1FF`). However, we can see an issue when we try to convert big integers like `0x1234567890abcdeffedcba908765421` to string decimal.
 
@@ -11,7 +13,7 @@ Presentation of *small* integer in decimal format works fine (e.g. `0x1FF`). How
 // output is '1.5123660750094533e+36' - incorrect - lose integer precision
 ````
 
-### Solution
+### Solution ###
 
 Node.js `biguint-format` module has been built in order to help display very large (arbitrary lengh) unsigned integers without any integer precision lose.
 
@@ -25,7 +27,7 @@ biguint.format([0x1, 0x23, 0x45, 0x67, 0x89, 0x0a, 0xbc, 0xde, 0xff, 0xed, 0xcb,
 // output value is '1512366075009453296626403467035300897' - no integer precision lose
 ```
 
-### `biguint-format` module
+## Usage ##
 
 The `biguint-format` module has `format(number, format [, options])` function which performs number conversion to the required string format. 
 
@@ -45,7 +47,7 @@ The `options` argument (optional) is an object which provides some additional co
 - `prefix` - output string prefix. It is not supported by `dec` conversion.
 - `delimiter` - used by `bin` conversion only; specifes delimiter between bytes. It is quite handy option when dealing with large numbers.
 
-#### Examples
+### Examples ###
 
 ```js
 var biguint  = require('biguint-format');
@@ -76,3 +78,11 @@ biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {delimit
 0010101011111111000111100010001000010001001100000001001000101111        // no delimiter
 00101010 11111111 00011110 00100010 00010001 00110000 00010010 00101111 // with delimiter
 ```
+## Author ##
+Writen by Tom Pawlak - [Blog](http://tompawlak.blogspot.co.uk)
+
+## License ##
+
+Copyright (c) 2014 Tom Pawlak
+
+MIT License : http://tompawlak.blogspot.com/p/mit.html
