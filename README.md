@@ -43,6 +43,7 @@ The `format` argument represents output string format and it can be one of the f
 The `options` argument (optional) is an object which provides some additional conversion details:
 - `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
 - `prefix` - output string prefix. It is not supported by `dec` conversion.
+- `delimiter` - used by `bin` conversion only; specifes delimiter between bytes. It is quite handy option when dealing with large numbers.
 
 #### Examples
 
@@ -52,15 +53,26 @@ var biguint  = require('biguint-format');
 var buffer1 = new Buffer([0x63, 0xA7, 0x27]);
 var buffer2 = new Buffer([0x27, 0xA7, 0x63]);
 
-biguint.format(buffer1, 'dec', {format:'LE'}) // returns '2598755'
-biguint.format(buffer2, 'dec', {format:'BE'}) // returns '2598755'
-biguint.format(buffer2, 'dec')                // returns '2598755'
+biguint.format(buffer1, 'dec', {format:'LE'})   // returns '2598755'
+biguint.format(buffer2, 'dec', {format:'BE'})   // returns '2598755'
+biguint.format(buffer2, 'dec')                  // returns '2598755'
 
-biguint.format(buffer1, 'hex', {format:'LE'}) // returns '27a763'
-biguint.format(buffer2, 'hex', {format:'BE'}) // returns '27a763'
-biguint.format(buffer2, 'hex', {prefix:'0x'}) // returns '0x27a763'
+biguint.format(buffer1, 'hex', {format:'LE'})   // returns '27a763'
+biguint.format(buffer2, 'hex', {format:'BE'})   // returns '27a763'
+biguint.format(buffer2, 'hex', {prefix:'0x'})   // returns '0x27a763'
 
-biguint.format(buffer2, 'bin')                // 1001111010011101100011
-biguint.format(buffer2, 'oct')                // 11723543
-biguint.format(buffer2, 'oct', {prefix:'0'})  // 011723543
+biguint.format(buffer2, 'bin')                  // 001001111010011101100011
+biguint.format(buffer2, 'bin', {delimiter:' '}) // 00100111 10100111 01100011
+biguint.format(buffer2, 'oct')                  // 11723543
+biguint.format(buffer2, 'oct', {prefix:'0'})    // 011723543
+```
+
+Usage of `delimiter` option which helps with large numbers e.g.
+```js
+biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin')
+biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {delimiter:' '})
+
+// returned values
+0010101011111111000111100010001000010001001100000001001000101111        // no delimiter
+00101010 11111111 00011110 00100010 00010001 00110000 00010010 00101111 // with delimiter
 ```
