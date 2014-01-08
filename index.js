@@ -201,10 +201,6 @@ function _rightShift (buffer) {
 
 if (typeof module !== "undefined") {
     module.exports = {
-		'toDecimalString': toDecimalString,
-		'toHexString': toHexString,
-		'toOctetString': toOctetString,
-		'toBinaryString': toBinaryString,
 		'format': format
 	}
 }
