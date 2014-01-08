@@ -1,5 +1,6 @@
 /**
- * Support big uint number convertion to decimal string in Node.js
+ * Support arbitrary lenght unsigned integer number convertion to string representation 
+ * in the specified radix (base) in Node.js.
  *
  * JavaScript Numbers are IEEE-754 binary double-precision floats, which limits the
  * range of values that can be represented with integer precision to:
@@ -7,21 +8,33 @@
  * 2^53 <= N <= 2^53
  *
  * For more details about IEEE-754 see: http://en.wikipedia.org/wiki/IEEE_floating_point
- *
- * All methods accept a big uint number (it can be node Buffer, an array of bytes 
- * i.e. number values from 0x0 to 0xFF, or a string (number) in a hexadecimal format) 
- * and a number format string 'BE' (default) for Big Endian and 'LE' for Little Endian.
  */
 
-function toDecimalString (buffer, format) {
-	var format = format || 'BE'                               // bytest format BE - Big Endian (default), LE - Little Endian
-		, buffer = _toBuffer(buffer, format, format !== 'LE') // number buffer working copy
-		, bits = buffer.length * 8                            // number of bits in the buffer
-		, lastBit = buffer.length -1                          // last bit index
-		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1))   // digits buffer
-		, lastDigit = digits.length - 1, d, carry;            // last digit index, digit index, carry flag
+ var FORMATS = {
+ 	'dec': toDecimalString,
+ 	'hex': toHexString,
+ 	'bin': toBinaryString,
+ 	'oct': toOctetString
+ }
 
-	digits.fill(0); // reset digits buffer
+ function format (buffer, base, options) {
+ 	var buffer = _toBuffer(buffer), formatter = FORMATS[base];
+
+ 	if(formatter) return formatter(buffer, options);
+ }
+
+function toDecimalString (buffer, options) {
+	var options = options || {}
+		, bits = buffer.length * 8                          // number of bits in the buffer
+		, lastBit = buffer.length -1                        // last bit index
+		, digits = new Buffer(Math.floor(bits / 3 + 1 + 1)) // digits buffer
+		, lastDigit = digits.length - 1, d, carry;          // last digit index, digit index, carry flag
+
+	// reset digits buffer
+	digits.fill(0);
+
+	// reverse buffer if not in LE format
+	if((options.format || 'BE') !== 'LE') _reverseBuffer(buffer);
 
 	for (i = 0; i < bits; i++) {
 		carry = buffer[lastBit] >= 0x80;
@@ -48,33 +61,49 @@ function toDecimalString (buffer, format) {
 	return digits.toString('ascii', d);
 }
 
+function toBinaryString (buffer, options) {
+	var options = options || {}, digits = new Array(buffer.length);
+
+	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
+
+	for (var i = 0; i < buffer.length; i++) {
+		digits[i] = buffer[i].toString(2);
+	};
+
+	return (options.prefix || '') + digits.join(options.delimiter || '');
+}
+
 /*
  * Converts given input (node Buffer or array of bytes) to hexadecimal string 0xDDDD where D is [0-9a-f].
  * All leading 0's are stripped out i.e. [0x00, 0x00, 0x00, 0x01] -> '0x1'
  */
-function toHexString (buffer, format) {
-	var format = format || 'BE'
-		, buffer = _toBuffer(buffer, format, format !== 'BE')
-		, digits = buffer.toString('hex')
-		, idx = _lastHeadIndex(digits, '0');
+function toHexString (buffer, options) {
+	var options = options || {}, digits, idx;
+
+	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
+
+	digits = buffer.toString('hex')
+	idx = _lastHeadIndex(digits, '0');
 
 	// if there are only 0's use the last digit
 	idx = idx >= 0 ? idx : digits.length - 1;
 	
-	return '0x' + digits.slice(idx);
+	return (options.prefix || '') + digits.slice(idx);
 }
 
-function toOctetString (buffer, format) {
-	var format = format || 'BE'
-		, buffer = _toBuffer(buffer, format, format !== 'BE')
+function toOctetString (buffer, options) {
+	var options = options || {}
 		, shifts = Math.floor(buffer.length * 8 / 3)
 		, lastIdx = buffer.length - 1
 		, digits = new Buffer(shifts)
 		, idx = -1;
 
 	digits.fill(0); // reset digits buffer
+	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
+
 	for (i = digits.length - 1; i >= 0; i--) {
 		digits[i] = buffer[lastIdx] & 0x7;
+
 		// right shift buffer by 3 bits
 		_rightShift(buffer);  
 		_rightShift(buffer);
@@ -88,7 +117,7 @@ function toOctetString (buffer, format) {
 	// convert numbers to ascii digits
 	_toAsciiDigits(digits, idx);
 
-	return '0' + digits.toString('ascii', idx)
+	return (options.prefix || '') + digits.toString('ascii', idx)
 }
 
 function _toAsciiDigits (buffer, offset) {
@@ -111,7 +140,7 @@ function _lastHeadIndex (buffer, value) {
 /*
  * Checks type of data and perform conversion if necessary
  */
-function _toBuffer (buffer, format, reverse) {
+function _toBuffer (buffer) {
 	var _buffer;
 	if (Buffer.isBuffer(buffer)) {
 		_buffer = new Buffer(buffer.length);
@@ -121,7 +150,7 @@ function _toBuffer (buffer, format, reverse) {
 		_buffer = new Buffer(buffer);
 	} 
 	else if (typeof buffer === 'string') {
-		var nums = buffer.replace(/^0x/i,'').match(/.{1,2}(?=(..)+(?!.))|..$/g)
+		var nums = buffer.replace(/^0x/i,'').match(/.{1,2}(?=(..)+(?!.))|..?$/g)
 			, _buffer = new Buffer(nums.length);
 
 		_buffer.fill(0);
@@ -129,9 +158,6 @@ function _toBuffer (buffer, format, reverse) {
 		for (var i = nums.length - 1; i >= 0; i--)
 			_buffer.writeUInt8(parseInt(nums[i], 16), i);
 	}
-
-	// Change internal format from BE to LE
-	if(reverse) _reverseBuffer(_buffer)
 
 	return _buffer;
 }
@@ -173,9 +199,12 @@ function _rightShift (buffer) {
 	};
 }
 
-
-module.exports = {
-	'toDecimalString': toDecimalString,
-	'toHexString': toHexString,
-	'toOctetString': toOctetString
+if (typeof module !== "undefined") {
+    module.exports = {
+		'toDecimalString': toDecimalString,
+		'toHexString': toHexString,
+		'toOctetString': toOctetString,
+		'toBinaryString': toBinaryString,
+		'format': format
+	}
 }
