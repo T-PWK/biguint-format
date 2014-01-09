@@ -1,5 +1,9 @@
 Big Unsigned Integer Formatter
 ==============================
+An arbitrary length unsigned integer formatter library for Node.js.
+
+[![NPM](https://nodei.co/npm/biguint-format.png)](https://nodei.co/npm/biguint-format/)
+
 JavaScript uses [IEEE 754 double-precision floats](http://en.wikipedia.org/wiki/IEEE_floating_point) to represents numbers. That works perfectly fine for small numbers, however, it is an issue for big integers. This means they lose integer precision for values beyond `+/- 2 pow 53`
 
 ### Problem ###
@@ -32,20 +36,20 @@ biguint.format([0x1, 0x23, 0x45, 0x67, 0x89, 0x0a, 0xbc, 0xde, 0xff, 0xed, 0xcb,
 The `biguint-format` module has `format(number, format [, options])` function which performs number conversion to the required string format. 
 
 The `number` argument represents an arbitrary lenght unsigned integer number to be converted to string. It can be provided in one of the following formats:
-- Node.js Buffer e.g. `new Buffer([0x1, 0xFF])`
-- An array of bytes (values from `0x00` to `0xFF`) e.g. `[0x1, 0xFF]`.
-- A string with a number in a hexadecimal format e.g. `0x1FF0A` or `1FF0A`
+* Node.js [Buffer](http://nodejs.org/api/buffer.html) e.g. `new Buffer([0x1, 0xFF])`
+* An array of bytes (values from `0x00` to `0xFF`) e.g. `[0x1, 0xFF]`.
+* A string with a number in a hexadecimal format e.g. `0x1FF0A` or `1FF0A`
 
 The `format` argument represents output string format and it can be one of the following options:
-- `dec` - convertion to decimal format e.g. `123324884`
-- `bin` - conversion to binary format e.g. `1100101010`
-- `hex` - conversion to hexadecimal format e.g. `0xADFFAA11`
-- `oct` - conversion to octet format e.g. `07771`
+* `dec` - convertion to decimal format e.g. `123324884`
+* `bin` - conversion to binary format e.g. `1100101010`
+* `hex` - conversion to hexadecimal format e.g. `0xADFFAA11`
+* `oct` - conversion to octet format e.g. `07771`
 
 The `options` argument (optional) is an object which provides some additional conversion details:
-- `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
-- `prefix` - output string prefix. It is not supported by `dec` conversion.
-- `delimiter` - used by `bin` conversion only; specifes delimiter between bytes. It is quite handy option when dealing with large numbers.
+* `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
+* `prefix` - output string prefix. It is not supported by `dec` conversion.
+* `delimiter` - used by `bin` conversion only; specifes delimiter between bytes. It is quite handy option when dealing with large numbers.
 
 ### Examples ###
 
