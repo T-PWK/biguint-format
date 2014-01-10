@@ -58,11 +58,12 @@ function toDecimalString (buffer, options) {
 	// convert numbers to ascii digits
 	_toAsciiDigits(digits, d);
 
-	return digits.toString('ascii', d);
+	return _split(digits.toString('ascii', d), options.groupsize, options.delimiter);
 }
 
 function toBinaryString (buffer, options) {
-	var options = options || {}, digits = new Array(buffer.length), num;
+	var options = options || {}, digits = new Array(buffer.length), size = options.groupsize || -1
+		, delimiter = options.delimiter || '', num, result;
 
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
@@ -71,7 +72,15 @@ function toBinaryString (buffer, options) {
 		digits[i] = '00000000'.slice(0, 8 - num.length) + buffer[i].toString(2)
 	};
 
-	return (options.prefix || '') + digits.join(options.delimiter || '');
+	if(size < 0) {
+		result = digits.join('');
+	} else if (size == 8) {
+		result = digits.join(delimiter);
+	} else if (size > 0) {
+		result = _split(digits.join(''), size, delimiter)
+	}
+
+	return (options.prefix || '') + result;
 }
 
 /*
@@ -89,7 +98,8 @@ function toHexString (buffer, options) {
 	// if there are only 0's use the last digit
 	idx = idx >= 0 ? idx : digits.length - 1;
 	
-	return (options.prefix || '') + digits.slice(idx);
+	return (options.prefix || '') 
+		+ _split(digits.slice(idx), options.groupsize, options.delimiter);
 }
 
 function toOctetString (buffer, options) {
@@ -118,7 +128,14 @@ function toOctetString (buffer, options) {
 	// convert numbers to ascii digits
 	_toAsciiDigits(digits, idx);
 
-	return (options.prefix || '') + digits.toString('ascii', idx)
+	return (options.prefix || '') 
+		+ _split(digits.toString('ascii', idx), options.groupsize, options.delimiter)
+}
+
+function _split (string, size, delim) {
+	return (typeof string !== 'undefined' && +size > 0 && typeof delim !== 'undefined') 
+		? string.replace(new RegExp('(\\d)(?=(\\d{' + +size + '})+(?!\\d))', 'g'), "$1" + delim)
+		: string;
 }
 
 function _toAsciiDigits (buffer, offset) {
@@ -182,8 +199,8 @@ function _leftShift (buffer) {
 	var carry;
 	for (var i = buffer.length; i >= 0; i--) {
 		carry = (buffer[i] & 0x80) != 0;
-		buffer[i] = (buffer[i] * 2) & 0xFF;
-		if(carry && i >= 0) buffer[i+1] |= 0x01;		
+		buffer[i] = (buffer[i] << 1) & 0xFF;
+		if(carry && i >= 0) buffer[i+1] |= 0x01;
 	};
 }
 
@@ -195,7 +212,7 @@ function _rightShift (buffer) {
 	for (var i = 0; i < buffer.length; i++) {
 		carry = prevcarry;
 		prevcarry = (buffer[i] & 0x1) != 0;
-		buffer[i] = Math.floor(buffer[i] / 2) & 0xFF;
+		buffer[i] >>= 1;
 		if(carry && i > 0) buffer[i] |= 0x80;
 	};
 }
