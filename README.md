@@ -48,8 +48,9 @@ The `format` argument represents output string format and it can be one of the f
 
 The `options` argument (optional) is an object which provides some additional conversion details:
 * `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
-* `prefix` - output string prefix. It is not supported by `dec` conversion.
-* `delimiter` - used by `bin` conversion only; specifes delimiter between bytes. It is quite handy option when dealing with large numbers.
+* `prefix` - output string prefix. Note that this option is not supported by `dec` conversion.
+* `groupsize` - splits output string into groups of `groupsize` lenght characters.
+* `delimiter` - specifes delimiter string to be inserted in between character groups. Default value is ` ` (space). It is quite handy option when dealing with large numbers.
 
 ### Examples ###
 
