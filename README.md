@@ -50,7 +50,7 @@ The `options` argument (optional) is an object which provides some additional co
 * `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
 * `prefix` - output string prefix. Note that this option is not supported by `dec` conversion.
 * `groupsize` - splits output string into groups of `groupsize` lenght characters.
-* `delimiter` - specifes delimiter string to be inserted in between character groups. Default value is ` ` (space). It is quite handy option when dealing with large numbers.
+* `delimiter` - specifes delimiter string to be inserted in between character groups. Default value is space. It is quite handy option when dealing with large numbers.
 
 ### Examples ###
 
@@ -69,7 +69,7 @@ biguint.format(buffer2, 'hex', {format:'BE'})   // returns '27a763'
 biguint.format(buffer2, 'hex', {prefix:'0x'})   // returns '0x27a763'
 
 biguint.format(buffer2, 'bin')                  // 001001111010011101100011
-biguint.format(buffer2, 'bin', {delimiter:' '}) // 00100111 10100111 01100011
+biguint.format(buffer2, 'bin', {groupsize:8})   // 00100111 10100111 01100011
 biguint.format(buffer2, 'oct')                  // 11723543
 biguint.format(buffer2, 'oct', {prefix:'0'})    // 011723543
 ```
@@ -77,7 +77,7 @@ biguint.format(buffer2, 'oct', {prefix:'0'})    // 011723543
 Usage of `delimiter` option which helps with large numbers e.g.
 ```js
 biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin')
-biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {delimiter:' '})
+biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {groupsize:8})
 
 // returned values
 0010101011111111000111100010001000010001001100000001001000101111        // no delimiter
