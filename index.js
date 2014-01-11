@@ -62,8 +62,8 @@ function toDecimalString (buffer, options) {
 }
 
 function toBinaryString (buffer, options) {
-	var options = options || {}, digits = new Array(buffer.length), size = options.groupsize || -1
-		, delimiter = options.delimiter || '', num, result;
+	var options = options || {}, digits = new Array(buffer.length)
+		, size = options.groupsize || -1, num, result;
 
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
@@ -72,12 +72,10 @@ function toBinaryString (buffer, options) {
 		digits[i] = '00000000'.slice(0, 8 - num.length) + buffer[i].toString(2)
 	};
 
-	if(size < 0) {
+	if(size <= 0) {
 		result = digits.join('');
-	} else if (size == 8) {
-		result = digits.join(delimiter);
-	} else if (size > 0) {
-		result = _split(digits.join(''), size, delimiter)
+	} else {
+		result = _split(digits.join(''), size, options.delimiter)
 	}
 
 	return (options.prefix || '') + result;
@@ -133,8 +131,10 @@ function toOctetString (buffer, options) {
 }
 
 function _split (string, size, delim) {
-	return (typeof string !== 'undefined' && +size > 0 && typeof delim !== 'undefined') 
-		? string.replace(new RegExp('(\\d)(?=(\\d{' + +size + '})+(?!\\d))', 'g'), "$1" + delim)
+	if(typeof delim === 'undefined')
+		delim = ' ';
+	return (typeof string !== 'undefined' && +size > 0)
+		? string.replace(new RegExp('(.)(?=(.{' + +size + '})+(?!.))', 'g'), "$1" + delim)
 		: string;
 }
 
