@@ -15,7 +15,7 @@ Presentation of *small* integer in decimal format works fine (e.g. `0x1FF`). How
 (0x1234567890abcdeffedcba908765421).toString(10) 
 
 // output is '1.5123660750094533e+36' - incorrect - lose integer precision
-````
+```
 
 ### Solution ###
 
