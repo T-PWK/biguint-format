@@ -1,10 +1,8 @@
-Big Unsigned Integer Formatter
+Big Unsigned Integer Formatter [![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)
 ==============================
 An arbitrary length unsigned integer formatter library for Node.js.
 
 [![NPM](https://nodei.co/npm/biguint-format.png)](https://nodei.co/npm/biguint-format/) 
-
-[![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)
 
 JavaScript uses [IEEE 754 double-precision floats](http://en.wikipedia.org/wiki/IEEE_floating_point) to represents numbers. That works perfectly fine for small numbers, however, it is an issue for big integers. This means they lose integer precision for values beyond `+/- 2 pow 53`
 
