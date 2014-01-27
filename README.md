@@ -1,4 +1,4 @@
-Big Unsigned Integer Formatter [![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)
+Big Unsigned Integer Formatter [![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format) [![Total views](https://sourcegraph.com/api/repos/github.com/T-PWK/biguint-format/counters/views.png)](https://sourcegraph.com/github.com/T-PWK/biguint-format) 
 ==============================
 An arbitrary length unsigned integer formatter library for Node.js.
 
