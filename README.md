@@ -1,8 +1,8 @@
-Big UInteger Formatter [![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)  [![NPM version](https://badge.fury.io/js/biguint-format.png)](http://badge.fury.io/js/biguint-format) [![Total views](https://sourcegraph.com/api/repos/github.com/T-PWK/biguint-format/counters/views.png)](https://sourcegraph.com/github.com/T-PWK/biguint-format) 
-==============================
-An arbitrary length unsigned integer formatter library for Node.js.
+Big UInteger Formatter 
+====
+[![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)  [![NPM version](https://badge.fury.io/js/biguint-format.png)](http://badge.fury.io/js/biguint-format) [![Total views](https://sourcegraph.com/api/repos/github.com/T-PWK/biguint-format/counters/views.png)](https://sourcegraph.com/github.com/T-PWK/biguint-format) 
 
-[![NPM](https://nodei.co/npm/biguint-format.png)](https://nodei.co/npm/biguint-format/) 
+An arbitrary length unsigned integer formatter library for Node.js.
 
 JavaScript uses [IEEE 754 double-precision floats](http://en.wikipedia.org/wiki/IEEE_floating_point) to represents numbers. That works perfectly fine for small numbers, however, it is an issue for big integers. This means they lose integer precision for values beyond `+/- 2 pow 53`
 
@@ -88,10 +88,10 @@ biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {groupsi
 00101010 11111111 00011110 00100010 00010001 00110000 00010010 00101111 // with delimiter
 ```
 ## Author ##
-Writen by Tom Pawlak - [Blog](http://tompawlak.blogspot.co.uk)
+Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
 
 ## License ##
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : http://tompawlak.blogspot.com/p/mit.html
+MIT License : http://blog.tompawlak.org/p/mit.html
