@@ -55,38 +55,67 @@ The `options` argument (optional) is an object which provides some additional co
 * `prefix` - output string prefix. Note that this option is not supported by `dec` conversion.
 * `groupsize` - splits output string into groups of `groupsize` lenght characters.
 * `delimiter` - specifes delimiter string to be inserted in between character groups. Default value is space. It is quite handy option when dealing with large numbers.
+* `trim` - (works only with `bin` formatting) specifies if the leading 0's should be trimmed.
+* `padstr` - string used for right-padding of the fomratted string if its length (inlucing prefix and grouping) is less than value of `size` parameter.
+* `size` - determines formatted string size. That opiton has effect only with `padstr` option. Note that the formatted string is not trimmed if its length is longer than value of `size` parameter.
 
 ### Examples ###
 
 ```js
-var biguint  = require('biguint-format');
+var format = require('biguint-format');
 
 var buffer1 = new Buffer([0x63, 0xA7, 0x27]);
 var buffer2 = new Buffer([0x27, 0xA7, 0x63]);
 
-biguint.format(buffer1, 'dec', {format:'LE'})   // returns '2598755'
-biguint.format(buffer2, 'dec', {format:'BE'})   // returns '2598755'
-biguint.format(buffer2, 'dec')                  // returns '2598755'
+format(buffer1, 'dec', {format:'LE'})   // returns '2598755'
+format(buffer2, 'dec', {format:'BE'})   // returns '2598755'
+format(buffer2, 'dec')                  // returns '2598755'
 
-biguint.format(buffer1, 'hex', {format:'LE'})   // returns '27a763'
-biguint.format(buffer2, 'hex', {format:'BE'})   // returns '27a763'
-biguint.format(buffer2, 'hex', {prefix:'0x'})   // returns '0x27a763'
+format(buffer1, 'hex', {format:'LE'})   // returns '27a763'
+format(buffer2, 'hex', {format:'BE'})   // returns '27a763'
+format(buffer2, 'hex', {prefix:'0x'})   // returns '0x27a763'
 
-biguint.format(buffer2, 'bin')                  // 001001111010011101100011
-biguint.format(buffer2, 'bin', {groupsize:8})   // 00100111 10100111 01100011
-biguint.format(buffer2, 'oct')                  // 11723543
-biguint.format(buffer2, 'oct', {prefix:'0'})    // 011723543
+format(buffer2, 'bin')                  // 001001111010011101100011
+format(buffer2, 'bin', {groupsize:8})   // 00100111 10100111 01100011
+format(buffer2, 'oct')                  // 11723543
+format(buffer2, 'oct', {prefix:'0'})    // 011723543
 ```
 
-Usage of `delimiter` option which helps with large numbers e.g.
+Use of `delimiter` option which helps with large numbers e.g.
 ```js
-biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin')
-biguint.format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {groupsize:8})
+var format = require('biguint-format');
+
+format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin')
+format([0x2A, 0xFF, 0x1E, 0x22, 0x11, 0x30, 0x12, 0x2F], 'bin', {groupsize:8})
 
 // returned values
 0010101011111111000111100010001000010001001100000001001000101111        // no delimiter
 00101010 11111111 00011110 00100010 00010001 00110000 00010010 00101111 // with delimiter
 ```
+
+Example of `trim` option which works only with binary formatter
+```js
+var format = require('biguint-format');
+var buffer = new Buffer([0x1, 0xA7, 0x63]);
+
+format(buffer, 'bin');              // returns 000000011010011101100011
+format(buffer, 'bin', {trim:true}); // returns 11010011101100011
+```
+
+Example of `padstr` and `size` options
+```js
+var format = require('biguint-format');
+var buffer = new Buffer([0x1, 0xA7, 0x63]);
+
+format(buffer, 'dec'); // returns 108387
+format(buffer, 'oct'); // returns 323543
+format(buffer, 'hex'); // returns 1a763
+
+format(buffer, 'dec', {padstr:'0', size:6});  // returns 108387 - no padding effect
+format(buffer, 'oct', {padstr:'0', size:10}); // returns 0000323543
+format(buffer, 'hex', {padstr:'0', size:6});  // returns 01a763
+```
+
 ## Author ##
 Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
 
