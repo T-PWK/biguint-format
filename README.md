@@ -35,7 +35,7 @@ biguint.format([0x1, 0x23, 0x45, 0x67, 0x89, 0x0a, 0xbc, 0xde, 0xff, 0xed, 0xcb,
 $ npm install biguint-format
 ```
 
-## Usage ##
+## API ##
 
 The `biguint-format` module is a function (`fn(number, format [, options])`) which performs number conversion to the required string format. 
 
