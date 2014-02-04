@@ -17,7 +17,7 @@
  	'oct': toOctetString
  }
 
- function format (buffer, base, options) {
+module.exports = function (buffer, base, options) {
  	var buffer = _toBuffer(buffer), formatter = FORMATS[base];
 
  	if(formatter) return formatter(buffer, options);
@@ -58,27 +58,34 @@ function toDecimalString (buffer, options) {
 	// convert numbers to ascii digits
 	_toAsciiDigits(digits, d);
 
-	return _split(digits.toString('ascii', d), options.groupsize, options.delimiter);
+	return _pad(
+		_split(digits.toString('ascii', d), options.groupsize, options.delimiter),
+		'', options.padstr, options.size);
 }
 
 function toBinaryString (buffer, options) {
 	var options = options || {}, digits = new Array(buffer.length)
-		, size = options.groupsize || -1, num, result;
+		, size = options.groupsize || -1, num, result
+		, prefix = options.prefix || '', output;
 
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
 	for (var i = 0; i < buffer.length; i++) {
 		num = buffer[i].toString(2);
-		digits[i] = '00000000'.slice(0, 8 - num.length) + buffer[i].toString(2)
+		digits[i] = '00000000'.slice(0, 8 - num.length) + buffer[i].toString(2);
 	};
 
-	if(size <= 0) {
-		result = digits.join('');
-	} else {
-		result = _split(digits.join(''), size, options.delimiter)
+	output = digits.join('');
+
+	if(options.trim) {
+		output = output.substr(output.indexOf('1'));
 	}
 
-	return (options.prefix || '') + result;
+	if(size > 0) {
+		output = _split(output, size, options.delimiter)
+	}
+
+	return prefix + _pad(output, prefix, options.padstr, options.size);
 }
 
 /*
@@ -86,7 +93,7 @@ function toBinaryString (buffer, options) {
  * All leading 0's are stripped out i.e. [0x00, 0x00, 0x00, 0x01] -> '0x1'
  */
 function toHexString (buffer, options) {
-	var options = options || {}, digits, idx;
+	var options = options || {}, prefix = options.prefix || '', digits, idx;
 
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
@@ -96,8 +103,8 @@ function toHexString (buffer, options) {
 	// if there are only 0's use the last digit
 	idx = idx >= 0 ? idx : digits.length - 1;
 	
-	return (options.prefix || '') 
-		+ _split(digits.slice(idx), options.groupsize, options.delimiter);
+	return prefix + _pad(
+		_split(digits.slice(idx), options.groupsize, options.delimiter), prefix, options.padstr, options.size);
 }
 
 function toOctetString (buffer, options) {
@@ -105,7 +112,7 @@ function toOctetString (buffer, options) {
 		, shifts = Math.floor(buffer.length * 8 / 3)
 		, lastIdx = buffer.length - 1
 		, digits = new Buffer(shifts)
-		, idx = -1;
+		, idx = -1, prefix = options.prefix || ''
 
 	digits.fill(0); // reset digits buffer
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
@@ -126,8 +133,8 @@ function toOctetString (buffer, options) {
 	// convert numbers to ascii digits
 	_toAsciiDigits(digits, idx);
 
-	return (options.prefix || '') 
-		+ _split(digits.toString('ascii', idx), options.groupsize, options.delimiter)
+	return prefix + _pad(
+		_split(digits.toString('ascii', idx), options.groupsize, options.delimiter), prefix, options.padstr, options.size);
 }
 
 function _split (string, size, delim) {
@@ -136,6 +143,14 @@ function _split (string, size, delim) {
 	return (typeof string !== 'undefined' && +size > 0)
 		? string.replace(new RegExp('(.)(?=(.{' + +size + '})+(?!.))', 'g'), "$1" + delim)
 		: string;
+}
+
+function _pad (str, prefix, pad, size) {
+	if ('undefined' === typeof pad || 'undefined' === typeof size || pad.length === 0 || str.length + prefix.length >= size) {
+		return str;
+	}
+	var padlen = size - str.length - prefix.length;
+	return new Array(Math.ceil(padlen / pad.length) + 1).join(pad).substr(0, padlen) + str;
 }
 
 function _toAsciiDigits (buffer, offset) {
@@ -215,10 +230,4 @@ function _rightShift (buffer) {
 		buffer[i] >>= 1;
 		if(carry && i > 0) buffer[i] |= 0x80;
 	};
-}
-
-if (typeof module !== "undefined") {
-    module.exports = {
-		'format': format
-	}
 }
