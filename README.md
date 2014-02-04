@@ -37,7 +37,7 @@ $ npm install biguint-format
 
 ## Usage ##
 
-The `biguint-format` module has `format(number, format [, options])` function which performs number conversion to the required string format. 
+The `biguint-format` module is a function (`fn(number, format [, options])`) which performs number conversion to the required string format. 
 
 The `number` argument represents an arbitrary lenght unsigned integer number to be converted to string. It can be provided in one of the following formats:
 * Node.js [Buffer](http://nodejs.org/api/buffer.html) e.g. `new Buffer([0x1, 0xFF])`
