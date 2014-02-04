@@ -8,6 +8,8 @@ var tests = [
 	[[0], 'dec'], '0',
 	['0x000000', 'dec'], '0',
 	['0x27A763', 'dec'], '2598755',
+	['0x27A763', 'dec', {padstr:'0', size:10}], '0002598755',
+	['0x27A763', 'dec', {padstr:'0000', size:10}], '0002598755',
 	['0x100', 'dec'], '256',
 	['0x0000100', 'dec'], '256',
 	['0x0000100', 'dec', {groupsize:1}], '2 5 6',
@@ -27,8 +29,14 @@ var tests = [
 	[[0x1, 0xFF, 0xFF], 'hex', {prefix:'0x'}], '0x1ffff',
 	[[0xFF, 0xFF, 0x01], 'hex', {format:'LE', prefix:'0x'}], '0x1ffff',
 	[[0x00, 0x00, 0x00, 0x01], 'hex', {prefix:'0x'}], '0x1',
+	[[0x00, 0x00, 0x00, 0x01], 'hex', {padstr:'0', size:12}], '000000000001',
+	[[0x00, 0x00, 0x00, 0x01], 'hex', {prefix:'0x', padstr:'0', size:12}], '0x0000000001',
 	['0x0000100', 'hex', {prefix:'0x'}], '0x100',
 	['0x1FF', 'oct'], '777',
+	['0x1FF', 'oct', {padstr:'0', size:1}], '777',
+	['0x1FF', 'oct', {padstr:'0', size:4, prefix:'0'}], '0777',
+	['0x1FF', 'oct', {padstr:'0', size:6}], '000777',
+	['0x1FF', 'oct', {padstr:'0', size:6, prefix:'0'}], '000777',
 	[[0xFF, 0x1], 'oct', {format:'LE'}], '777',
 	['0x123456789A', 'oct', {prefix:'0'}], '01106425474232',
 	['0x123456789ABCDEFF', 'oct', {prefix:'0'}], '0110642547423257157377',
@@ -36,13 +44,21 @@ var tests = [
 	[[0xFF, 0x1], 'bin', {format:'LE'}], '0000000111111111',
 	[[0x1, 0xFF], 'bin'], '0000000111111111',
 	[[0x1, 0xFF], 'bin', {delimiter:' ', groupsize:1}], '0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1',
-	[[0x1, 0xFF], 'bin', {groupsize:1}], '0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1',
-	['0x1FF', 'bin', {delimiter:' '}], '0000000111111111',
+	[[0x1, 0xFF], 'bin', {groupsize:1}], '0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1', // default delimiter is ' '
+	['0x1FF', 'bin', {delimiter:' '}], '0000000111111111',  // group size needs to be provided
 	['0x1FF', 'bin', {delimiter:' ', groupsize:8}], '00000001 11111111',
-	['0x1FF', 'bin', {delimiter:'|', prefix:'B', groupsize:8}], 'B00000001|11111111'
+	['0x1FF', 'bin', {delimiter:'|', prefix:'B', groupsize:8}], 'B00000001|11111111',
+	['0x1FF', 'bin', {trim:true}], '111111111',
+	['0x1FF', 'bin', {trim:true, prefix:'B'}], 'B111111111',
+	['0x1FF', 'bin', {trim:true, prefix:'B', padstr:'0', size:12}], 'B00111111111',
+	['0x1FF', 'bin', {trim:true, padstr:'0', size:12}], '000111111111',
+	['0x1FF', 'bin', {padstr:'0', size:12}], '0000000111111111',
+	['0x0', 'bin', {trim:true}], '0',
+	['0x1', 'bin', {trim:true}], '1',
+	['0x1', 'bin', {trim:true, padstr:'0', size:8}], '00000001'
 ]
 
 // Iterate over all tests
 for (var i = 0; i < tests.length; i += 2) {
-	assert.equal (biguint.format.apply(biguint, tests[i]), tests[i+1]);
+	assert.equal (biguint.apply(biguint, tests[i]), tests[i+1]);
 };

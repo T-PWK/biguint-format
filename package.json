@@ -1,6 +1,6 @@
 {
   "name": "biguint-format",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "An arbitrary length unsigned integer formatter library for Node.js",
   "main": "index.js",
   "scripts": {
@@ -23,8 +23,15 @@
     "binary",
     "formatting"
   ],
-  "author": "Tom Pawlak",
-  "license": "MIT",
+  "author": {
+    "name": "Tom Pawlak",
+    "url": "http://blog.tompawlak.org/",
+    "email": "tompwk@gmail.com"
+  },
+  "licenses": [{
+        "type": "MIT",
+        "url": "http://blog.tompawlak.org/p/mit.html"
+  }],
   "bugs": {
     "url": "https://github.com/T-PWK/biguint-format/issues"
   }
