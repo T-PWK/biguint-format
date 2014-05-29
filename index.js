@@ -36,12 +36,12 @@ function toDecimalString (buffer, options) {
 	// reverse buffer if not in LE format
 	if((options.format || 'BE') !== 'LE') _reverseBuffer(buffer);
 
-	for (i = 0; i < bits; i++) {
+	for (var i = 0; i < bits; i++) {
 		carry = buffer[lastBit] >= 0x80;
 
 		_leftShift(buffer);  // shift buffer bits
 
-		for (d = lastDigit; d >= 0; d--) {
+		for (var d = lastDigit; d >= 0; d--) {
 			digits[d] += digits[d] + (carry ? 1 : 0);
 			carry = (digits[d] > 9);
 			if (carry) digits[d] -= 10;
@@ -117,7 +117,7 @@ function toOctetString (buffer, options) {
 	digits.fill(0); // reset digits buffer
 	if((options.format || 'BE') !== 'BE') _reverseBuffer(buffer);
 
-	for (i = digits.length - 1; i >= 0; i--) {
+	for (var i = digits.length - 1; i >= 0; i--) {
 		digits[i] = buffer[lastIdx] & 0x7;
 
 		// right shift buffer by 3 bits
