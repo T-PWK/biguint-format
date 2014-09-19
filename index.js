@@ -20,6 +20,7 @@
     };
 
     module.exports = function (buffer, base, options) {
+        base = base || 'dec';
         var buf = _toBuffer(buffer), format = FORMATS[base];
 
         if (format) {
