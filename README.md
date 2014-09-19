@@ -50,6 +50,8 @@ The `format` argument represents output string format and it can be one of the f
 * `hex` - conversion to hexadecimal format e.g. `0xADFFAA11`
 * `oct` - conversion to octet format e.g. `07771`
 
+If `format` argument is missing, `dec` format is used as a default option. Note that you will have to specify format if you would like to use `options` argument.
+
 The `options` argument (optional) is an object which provides some additional conversion details:
 * `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
 * `prefix` - output string prefix. Note that this option is not supported by `dec` conversion.
