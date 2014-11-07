@@ -126,3 +126,5 @@ Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
 Copyright (c) 2014 Tom Pawlak
 
 MIT License : http://blog.tompawlak.org/p/mit.html
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/T-PWK/biguint-format/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
