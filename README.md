@@ -1,6 +1,6 @@
 Big UInteger Formatter 
 ====
-[![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)  [![NPM version](https://badge.fury.io/js/biguint-format.png)](http://badge.fury.io/js/biguint-format) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format) [![Total views](https://sourcegraph.com/api/repos/github.com/T-PWK/biguint-format/counters/views.png)](https://sourcegraph.com/github.com/T-PWK/biguint-format) 
+[![Build Status](https://travis-ci.org/T-PWK/biguint-format.png?branch=master)](https://travis-ci.org/T-PWK/biguint-format)  [![NPM version](https://badge.fury.io/js/biguint-format.png)](http://badge.fury.io/js/biguint-format) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format)
 
 An arbitrary length unsigned integer formatter library for Node.js.
 
