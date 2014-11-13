@@ -59,16 +59,16 @@
         }
 
         // get rid of leading 0's; reuse d for the first non-zero value index
-        var d = _lastHeadIndex(digits, 0);
+        var idx = _lastHeadIndex(digits, 0);
 
         // if there are only 0's use the last digit
-        d = d >= 0 ? d : lastDigit;
+        idx = idx >= 0 ? idx : lastDigit;
 
         // convert numbers to ascii digits
-        _toAsciiDigits(digits, d);
+        _toAsciiDigits(digits, idx);
 
         return _pad(
-            _split(digits.toString('ascii', d), options.groupsize, options.delimiter),
+            _split(digits.toString('ascii', idx), options.groupsize, options.delimiter),
             '', options.padstr, options.size);
     }
 
@@ -159,9 +159,10 @@
         if (typeof delim === 'undefined') {
             delim = ' ';
         }
-        return (typeof string !== 'undefined' && +size > 0)
-            ? string.replace(new RegExp('(.)(?=(.{' + +size + '})+(?!.))', 'g'), "$1" + delim)
-            : string;
+        if (typeof string !== 'undefined' && +size > 0) {
+            string = string.replace(new RegExp('(.)(?=(.{' + +size + '})+(?!.))', 'g'), "$1" + delim);
+        }
+        return string;
     }
 
     function _pad(str, prefix, pad, size) {
