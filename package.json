@@ -4,7 +4,7 @@
   "description": "An arbitrary length unsigned integer formatter library for Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "istanbul cover _mocha --report lcovonly"
   },
   "repository": {
     "type": "git",
