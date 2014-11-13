@@ -9,6 +9,7 @@
  *
  * For more details about IEEE-754 see: http://en.wikipedia.org/wiki/IEEE_floating_point
  */
+ /*jslint bitwise: true */
 (function () {
     "use strict";
 
@@ -58,7 +59,7 @@
         }
 
         // get rid of leading 0's; reuse d for the first non-zero value index
-        d = _lastHeadIndex(digits, 0);
+        var d = _lastHeadIndex(digits, 0);
 
         // if there are only 0's use the last digit
         d = d >= 0 ? d : lastDigit;
@@ -94,7 +95,7 @@
         }
 
         if (size > 0) {
-            output = _split(output, size, options.delimiter)
+            output = _split(output, size, options.delimiter);
         }
 
         return prefix + _pad(output, prefix, options.padstr, options.size);
@@ -235,7 +236,7 @@
     function _leftShift(buffer) {
         var carry;
         for (var i = buffer.length; i >= 0; i--) {
-            carry = (buffer[i] & 0x80) != 0;
+            carry = (buffer[i] & 0x80) !== 0;
             buffer[i] = (buffer[i] << 1) & 0xFF;
             if (carry && i >= 0) {
                 buffer[i + 1] |= 0x01;
@@ -250,7 +251,7 @@
         var carry, prevcarry;
         for (var i = 0; i < buffer.length; i++) {
             carry = prevcarry;
-            prevcarry = (buffer[i] & 0x1) != 0;
+            prevcarry = (buffer[i] & 0x1) !== 0;
             buffer[i] >>= 1;
             if (carry && i > 0) {
                 buffer[i] |= 0x80;
