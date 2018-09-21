@@ -1,6 +1,9 @@
 Big UInteger Formatter 
 ====
-[![Build Status](https://travis-ci.org/T-PWK/biguint-format.svg?branch=master)](https://travis-ci.org/T-PWK/biguint-format) [![npm version](https://badge.fury.io/js/biguint-format.svg)](http://badge.fury.io/js/biguint-format) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format) [![Code Climate](https://codeclimate.com/github/T-PWK/biguint-format/badges/gpa.svg)](https://codeclimate.com/github/T-PWK/biguint-format) [![Test Coverage](https://codeclimate.com/github/T-PWK/biguint-format/badges/coverage.svg)](https://codeclimate.com/github/T-PWK/biguint-format)
+[![Build Status](https://travis-ci.org/T-PWK/biguint-format.svg?branch=master)](https://travis-ci.org/T-PWK/biguint-format)
+[![npm version](https://badge.fury.io/js/biguint-format.svg)](http://badge.fury.io/js/biguint-format)
+[![Code Climate](https://codeclimate.com/github/T-PWK/biguint-format/badges/gpa.svg)](https://codeclimate.com/github/T-PWK/biguint-format) 
+[![Test Coverage](https://codeclimate.com/github/T-PWK/biguint-format/badges/coverage.svg)](https://codeclimate.com/github/T-PWK/biguint-format)
 
 An arbitrary length unsigned integer formatter library for Node.js.
 
@@ -121,10 +124,10 @@ format(buffer, 'hex', {padstr:'0', size:6});  // returns 01a763
 ```
 
 ## Author ##
-Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
+Writen by Tom Pawlak - [Blog](https://blog.abelotech.com)
 
 ## License ##
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : http://blog.tompawlak.org/mit-license
+MIT License : https://blog.abelotech.com/mit-license/
