@@ -25,13 +25,14 @@
   ],
   "author": {
     "name": "Tom Pawlak",
-    "url": "http://blog.tompawlak.org/",
+    "url": "https://blog.abelotech.com/",
     "email": "tompwk@gmail.com"
   },
-  "licenses": [{
-        "type": "MIT",
-        "url": "http://blog.tompawlak.org/p/mit.html"
-  }],
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/T-PWK/biguint-format/issues"
   }
