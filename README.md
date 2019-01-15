@@ -22,7 +22,7 @@ Presentation of *small* integer in decimal format works fine (e.g. `0x1FF`). How
 
 ### Solution ###
 
-Node.js `biguint-format` module has been built in order to help display very large (arbitrary lengh) unsigned integers without any integer precision lose.
+Node.js `biguint-format` module has been built in order to help display very large (arbitrary length) unsigned integers without any integer precision lose.
 
 Example:
 ```js
@@ -35,7 +35,7 @@ format([
 
 // output value is '1512366075009453296626403467035300897' - no integer precision lose
 ```
-## Instalation ##
+## Installation ##
 ```
 $ npm install biguint-format
 ```
@@ -44,13 +44,13 @@ $ npm install biguint-format
 
 The `biguint-format` module is a function (`fn(number, format [, options])`) which performs number conversion to the required string format. 
 
-The `number` argument represents an arbitrary lenght unsigned integer number to be converted to string. It can be provided in one of the following formats:
+The `number` argument represents an arbitrary length unsigned integer number to be converted to string. It can be provided in one of the following formats:
 * Node.js [Buffer](http://nodejs.org/api/buffer.html) e.g. `new Buffer([0x1, 0xFF])`
 * An array of bytes (values from `0x00` to `0xFF`) e.g. `[0x1, 0xFF]`.
 * A string with a number in a hexadecimal format e.g. `0x1FF0A` or `1FF0A`
 
 The `format` argument represents output string format and it can be one of the following options:
-* `dec` - convertion to decimal format e.g. `123324884`
+* `dec` - conversion to decimal format e.g. `123324884`
 * `bin` - conversion to binary format e.g. `1100101010`
 * `hex` - conversion to hexadecimal format e.g. `0xADFFAA11`
 * `oct` - conversion to octet format e.g. `07771`
@@ -60,11 +60,11 @@ If `format` argument is missing, `dec` format is used as a default option. Note 
 The `options` argument (optional) is an object which provides some additional conversion details:
 * `format` - specifies format of the input number. It can be either `BE` for Big Endian or `LE` for Little Endian. `BE` is a default value. Check [wikipedia](http://en.wikipedia.org/wiki/Endianness) for more details.
 * `prefix` - output string prefix. Note that this option is not supported by `dec` conversion.
-* `groupsize` - splits output string into groups of `groupsize` lenght characters.
-* `delimiter` - specifes delimiter string to be inserted in between character groups. Default value is space. It is quite handy option when dealing with large numbers.
+* `groupsize` - splits output string into groups of `groupsize` length characters.
+* `delimiter` - specifies delimiter string to be inserted in between character groups. Default value is space. It is quite handy option when dealing with large numbers.
 * `trim` - (works only with `bin` formatting) specifies if the leading 0's should be trimmed.
-* `padstr` - string used for right-padding of the fomratted string if its length (inlucing prefix and grouping) is less than value of `size` parameter.
-* `size` - determines formatted string size. That opiton has effect only with `padstr` option. Note that the formatted string is not trimmed if its length is longer than value of `size` parameter.
+* `padstr` - string used for right-padding of the formatted string if its length (including prefix and grouping) is less than value of `size` parameter.
+* `size` - determines formatted string size. That option has effect only with `padstr` option. Note that the formatted string is not trimmed if its length is longer than value of `size` parameter.
 
 ### Examples ###
 
@@ -124,7 +124,7 @@ format(buffer, 'hex', {padstr:'0', size:6});  // returns 01a763
 ```
 
 ## Author ##
-Writen by Tom Pawlak - [Blog](https://blog.abelotech.com)
+Written by Tom Pawlak - [Blog](https://blog.abelotech.com)
 
 ## License ##
 
