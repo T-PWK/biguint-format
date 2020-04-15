@@ -1,7 +1,6 @@
 var assert     = require('assert')
 	, biguint  = require('../index');
 
-
 describe('biguint-format', function () {
 	describe('dec formatter', function () {
 
@@ -11,9 +10,9 @@ describe('biguint-format', function () {
 
 		it('should format Buffer instance', function () {
 			runTests([
-				[new Buffer([0, 0, 0, 0]), 'dec'], '0',
-				[new Buffer([0, 0, 0, 0])], '0',
-				[new Buffer([0]), 'dec'], '0'
+				[Buffer.from([0, 0, 0, 0]), 'dec'], '0',
+				[Buffer.from([0, 0, 0, 0])], '0',
+				[Buffer.from([0]), 'dec'], '0'
 			]);
 		});
 
