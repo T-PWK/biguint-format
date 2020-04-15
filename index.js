@@ -29,12 +29,33 @@
         }
     };
 
+    function createBuffer(size) {
+        var buf;
+        if (Buffer.alloc) {
+            buf = Buffer.alloc(size);
+        } else {
+            buf = new Buffer(size);
+            buf.fill(0);
+        }
+        return buf;
+    }
+
+    function createBufferFrom(object) {
+        var buf;
+        if (Buffer.from) {
+            buf = Buffer.from(object);
+        } else {
+            buf = new Buffer(object);
+        }
+        return buf;
+    }
+
     function toDecimalString(buffer, options) {
         options = options || {};
-        var bits = buffer.length * 8,                           // number of bits in the buffer
-            lastBit = buffer.length - 1,                        // last bit index
-            digits = new Buffer(Math.floor(bits / 3 + 1 + 1)),  // digits buffer
-            lastDigit = digits.length - 1, carry;               // last digit index, digit index, carry flag
+        var bits = buffer.length * 8,                               // number of bits in the buffer
+            lastBit = buffer.length - 1,                            // last bit index
+            digits = createBuffer(Math.floor(bits / 3 + 1 + 1)),    // digits buffer
+            lastDigit = digits.length - 1, carry;                   // last digit index, digit index, carry flag
 
         // reset digits buffer
         digits.fill(0);
@@ -127,7 +148,7 @@
         options = options || {};
         var shifts = Math.floor(buffer.length * 8 / 3),
             lastIdx = buffer.length - 1,
-            digits = new Buffer(shifts),
+            digits = createBuffer(shifts),
             prefix = options.prefix || '', idx;
 
         digits.fill(0); // reset digits buffer
@@ -198,18 +219,12 @@
     function _toBuffer(buffer) {
         var _buffer, nums;
 
-        if (Buffer.isBuffer(buffer)) {
-            _buffer = new Buffer(buffer.length);
-            buffer.copy(_buffer);
-        }
-        else if (Array.isArray(buffer)) {
-            _buffer = new Buffer(buffer);
+        if (Buffer.isBuffer(buffer) || Array.isArray(buffer)) {
+            _buffer = createBufferFrom(buffer);
         }
         else if (typeof buffer === 'string') {
             nums = buffer.replace(/^0x/i, '').match(/.{1,2}(?=(..)+(?!.))|..?$/g);
-            _buffer = new Buffer(nums.length);
-
-            _buffer.fill(0);
+            _buffer = createBuffer(nums.length);
 
             for (var i = nums.length - 1; i >= 0; i--) {
                 _buffer.writeUInt8(parseInt(nums[i], 16), i);
