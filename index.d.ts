@@ -12,16 +12,16 @@ interface FORMATS {
 }
 
 interface formatOption {
-  format: string;
-  groupsize: number;
-  delimiter: string;
-  padstr: string;
-  size: number;
+  format?: string;
+  groupsize?: number;
+  delimiter?: string;
+  padstr?: string;
+  size?: number;
 }
 
 export default function (
   buffer: Buffer,
-  base: string,
+  base: 'dec' | 'hex' | 'bin' | 'oct',
   options: formatOption
 ): string;
 
