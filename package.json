@@ -35,5 +35,8 @@
   ],
   "bugs": {
     "url": "https://github.com/T-PWK/biguint-format/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.10"
   }
 }
