@@ -17,6 +17,8 @@ interface formatOption {
   delimiter?: string;
   padstr?: string;
   size?: number;
+  trim?: boolean;
+  prefix?: string;
 }
 
 export default function (
