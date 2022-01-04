@@ -24,21 +24,21 @@ interface formatOption {
 export default function (
   buffer: Buffer,
   base: 'dec' | 'hex' | 'bin' | 'oct',
-  options: formatOption
+  options?: formatOption
 ): string;
 
 export function createBuffer(size: number): Buffer;
 
 export function createBufferFrom(object: object): Buffer;
 
-export function toDecimalString(buffer: Buffer, options: formatOption): string;
+export function toDecimalString(buffer: Buffer, options?: formatOption): string;
 
-export function toBinaryString(buffer: Buffer, options: formatOption): string;
+export function toBinaryString(buffer: Buffer, options?: formatOption): string;
 
 /*
  * Converts given input (node Buffer or array of bytes) to hexadecimal string 0xDDDD where D is [0-9a-f].
  * All leading 0's are stripped out i.e. [0x00, 0x00, 0x00, 0x01] -> '0x1'
  */
-export function toHexString(buffer: Buffer, options: formatOption): string;
+export function toHexString(buffer: Buffer, options?: formatOption): string;
 
-export function toOctetString(buffer: Buffer, options: formatOption): string;
+export function toOctetString(buffer: Buffer, options?: formatOption): string;
