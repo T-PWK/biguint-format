@@ -37,9 +37,8 @@
     "url": "https://github.com/T-PWK/biguint-format/issues"
   },
   "devDependencies": {
-    "@types/node": "^16.7.10"
-  },
-  "dependencies": {
-    "nyc": "^15.1.0"
+    "@types/node": "^16.7.10",
+    "nyc": "^15.1.0",
+    "mocha": "^10.0.0"
   }
 }
