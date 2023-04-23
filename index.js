@@ -34,7 +34,7 @@
         if (Buffer.alloc) {
             buf = Buffer.alloc(size);
         } else {
-            buf = new Buffer(size);
+            buf = Buffer.from(size);
             buf.fill(0);
         }
         return buf;
@@ -45,7 +45,7 @@
         if (Buffer.from) {
             buf = Buffer.from(object);
         } else {
-            buf = new Buffer(object);
+            buf = Buffer.from(object);
         }
         return buf;
     }
